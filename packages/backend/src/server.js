@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/:channelId/send', (req, res, next) => {
 	const { channelId } = req.params;
-	console.log(req.body);
 	sendEventsToAll(
 		{
 			message: '[nodejs] ' + req.body.message,
