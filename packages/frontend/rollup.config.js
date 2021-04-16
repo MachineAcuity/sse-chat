@@ -20,8 +20,8 @@ export default {
 			dev: !production,
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
-			css: css => {
-				css.write('public/build/bundle.css');
+			css: (css) => {
+				css.write('bundle.css');
 			}
 		}),
 
@@ -32,7 +32,7 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: [ 'svelte' ]
 		}),
 		commonjs(),
 
@@ -61,8 +61,8 @@ function serve() {
 			if (!started) {
 				started = true;
 
-				require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-					stdio: ['ignore', 'inherit', 'inherit'],
+				require('child_process').spawn('npm', [ 'run', 'dev-server', '--', '--dev' ], {
+					stdio: [ 'ignore', 'inherit', 'inherit' ],
 					shell: true
 				});
 			}
