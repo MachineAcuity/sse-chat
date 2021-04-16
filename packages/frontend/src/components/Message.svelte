@@ -1,23 +1,23 @@
 <script>
-  export let alignRight = false;
-  export let message = {
+export let alignRight = false;
+export let message = {
     username: "Unknown",
     message: "",
     time: Date.now()
-  };
+};
 </script>
 
 <style>
-  .root {
+.root {
     margin-bottom: 15px;
-  }
+}
 
-  .time {
+.time {
     color: #a8aab1;
     padding-left: 6px;
-  }
+}
 
-  .message {
+.message {
     color: white;
     padding: 18px 20px;
     line-height: 26px;
@@ -26,9 +26,9 @@
     margin-bottom: 30px;
     width: 90%;
     position: relative;
-  }
+}
 
-  .message:after {
+.message:after {
     bottom: 100%;
     left: 7%;
     border: solid transparent;
@@ -40,66 +40,67 @@
     border-bottom-color: #86bb71;
     border-width: 10px;
     margin-left: -10px;
-  }
+}
 
-  .my-message {
+.my-message {
     background: #86bb71;
-  }
+}
 
-  .other-message {
+.other-message {
     background: #94c2ed;
-  }
+}
 
-  .other-message:after {
+.other-message:after {
     border-bottom-color: #94c2ed;
     left: 93%;
-  }
+}
 
-  .online,
-  .me {
+.online,
+.me {
     margin-right: 3px;
     font-size: 10px;
-  }
+}
 
-  .online {
+.online {
     color: #86bb71;
-  }
+}
 
-  .me {
+.me {
     color: #94c2ed;
-  }
+}
 
-  .align-right {
+.align-right {
     text-align: right;
-  }
-  .float-right {
+}
+
+.float-right {
     float: right;
-  }
+}
 </style>
 
 {#if alignRight}
-  <div>
+<div>
     <div class="root align-right">
-      <span class="time">
-        {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
-      </span>
-      &nbsp; &nbsp;
-      <span>{message.username}</span>
-      <i class="fa fa-circle me" />
+        <span class="time">
+            {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
+        </span>
+        &nbsp; &nbsp;
+        <span>{message.username}</span>
+        <i class="fa fa-circle me" />
     </div>
     <div class="message other-message float-right">{message.message}</div>
-  </div>
+</div>
 {:else}
-  <div>
+<div>
     <div class="root">
-      <span>
-        <i class="fa fa-circle online" />
-        {message.username}
-      </span>
-      <span class="time">
-        {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
-      </span>
+        <span>
+            <i class="fa fa-circle online" />
+            {message.username}
+        </span>
+        <span class="time">
+            {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
+        </span>
     </div>
     <div class="message my-message">{message.message}</div>
-  </div>
+</div>
 {/if}

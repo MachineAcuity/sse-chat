@@ -1,15 +1,15 @@
 <script>
-  import Tchat from "../components/Tchat.svelte";
+import Tchat from "../components/Tchat.svelte";
 
-  export let params = {};
+export let params = {};
 </script>
 
 <style>
-  .root {
+.root {
     padding: 80px 0;
-  }
+}
 </style>
 
 <div class="root">
-  <Tchat channelId={params.id} />
+    <Tchat channelId={params.id} />
 </div>

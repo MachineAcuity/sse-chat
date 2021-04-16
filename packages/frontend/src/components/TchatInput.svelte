@@ -1,31 +1,35 @@
 <script>
-  import { createEventDispatcher } from "svelte";
+import {
+    createEventDispatcher
+} from "svelte";
 
-  const dispatch = createEventDispatcher();
-  let value = "";
+const dispatch = createEventDispatcher();
+let value = "";
 
-  const handleSubmit = () => {
-    dispatch("message", { text: value });
+const handleSubmit = () => {
+    dispatch("message", {
+        text: value
+    });
 
     value = "";
-  };
+};
 </script>
 
 <style>
-  .root {
+.root {
     padding: 30px;
-  }
+}
 
-  .root:after {
+.root:after {
     visibility: hidden;
     display: block;
     font-size: 0;
     content: " ";
     clear: both;
     height: 0;
-  }
+}
 
-  textarea {
+textarea {
     width: 100%;
     border: none;
     padding: 10px 20px;
@@ -33,9 +37,9 @@
     margin-bottom: 10px;
     border-radius: 5px;
     resize: none;
-  }
+}
 
-  button {
+button {
     float: right;
     color: #94c2ed;
     font-size: 16px;
@@ -44,14 +48,14 @@
     cursor: pointer;
     font-weight: bold;
     background: #f2f5f8;
-  }
+}
 
-  button:hover {
+button:hover {
     color: #75b1e8;
-  }
+}
 </style>
 
 <div class="root">
-  <textarea bind:value placeholder="Type your message" rows="3" />
-  <button on:click={handleSubmit}>Send</button>
+    <textarea bind:value placeholder="Type your message" rows="3" />
+    <button on:click={handleSubmit}>Send</button>
 </div>
