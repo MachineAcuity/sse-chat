@@ -55,20 +55,6 @@ export let message = {
     left: 93%;
 }
 
-.online,
-.me {
-    margin-right: 3px;
-    font-size: 10px;
-}
-
-.online {
-    color: #86bb71;
-}
-
-.me {
-    color: #94c2ed;
-}
-
 .align-right {
     text-align: right;
 }
@@ -86,7 +72,6 @@ export let message = {
         </span>
         &nbsp; &nbsp;
         <span>{message.username}</span>
-        <i class="fa fa-circle me" />
     </div>
     <div class="message other-message float-right">{message.message}</div>
 </div>
@@ -94,7 +79,6 @@ export let message = {
 <div>
     <div class="root">
         <span>
-            <i class="fa fa-circle online" />
             {message.username}
         </span>
         <span class="time">

@@ -3,8 +3,6 @@ import {
     push
 } from "svelte-spa-router";
 
-import Svg from './myimage.svg'
-
 let channelId = "";
 let username = "";
 
@@ -25,5 +23,4 @@ const handleJoin = () => {
     </div>
     <button on:click={handleJoin}>Join !</button>
     <br>
-    <img src="data:image/svg+xml;utf8,{Svg}" alt="Whatever" />
 </div>
