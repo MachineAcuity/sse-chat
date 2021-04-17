@@ -136,41 +136,20 @@ async fn main() {
             .body(CHAT_HTML)
     });
 
-    // GET / -> index html
-    let index = warp::path::end().map(|| {
-        warp::http::Response::builder()
-            .header("content-type", "text/html; charset=utf-8")
-            .body(INDEX_HTML)
-    });
+    // GET public static files and index
+    const PUBLIC_DIR: &str = "./public";
+    let public_files = warp::fs::dir(PUBLIC_DIR);
+    let public_files_index = warp::fs::file(format!("{}/index.html", PUBLIC_DIR));
 
-    let routes = index.or(room).or(chat_recv).or(chat_send);
+    // Combine all routes
+    let routes = room
+        .or(chat_recv)
+        .or(chat_send)
+        .or(public_files)
+        .or(public_files_index);
 
     warp::serve(routes).run(([127, 0, 0, 1], 5050)).await;
 }
-
-static INDEX_HTML: &str = r#" 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Rust chat</title>
-    </head>
-    <body>
-        <h1>Rust chat</h1>
-        <script>
-        function onSubmit() {
-            setTimeout(() => {
-                location.href="/room/"+document.getElementById("name").value;
-            },10 );
-            return false;
-        }
-        </script>
-        <form onsubmit="onSubmit()">
-            <input id="name" type="text" placeholder="room name" />
-            <input type="submit">
-        </form>
-    </body>
-</html>
-"#;
 
 static CHAT_HTML: &str = r#"
 <!DOCTYPE html>
