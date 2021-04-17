@@ -29,7 +29,7 @@ impl warp::reject::Reject for NotUtf8 {}
 type Users = Arc<Mutex<HashMap<String, HashMap<usize, mpsc::UnboundedSender<Message>>>>>;
 
 fn user_connected(
-    tenant_name: String,
+    room_name: String,
     users: Users,
 ) -> impl Stream<Item = Result<Event, warp::Error>> + Send + 'static {
     // Use a counter to assign a new unique ID for this user.
@@ -47,16 +47,16 @@ fn user_connected(
         .unwrap();
 
     // Save the sender in our list of connected users.
-    let mut tenants = users.lock().unwrap();
-    let tenant = tenants.get_mut(&tenant_name);
-    match tenant {
-        Some(tenant) => {
-            tenant.insert(my_id, tx);
+    let mut rooms = users.lock().unwrap();
+    let room = rooms.get_mut(&room_name);
+    match room {
+        Some(room) => {
+            room.insert(my_id, tx);
         }
         None => {
-            let mut new_tenant = HashMap::new();
-            new_tenant.insert(my_id, tx);
-            tenants.insert(tenant_name, new_tenant);
+            let mut new_room = HashMap::new();
+            new_room.insert(my_id, tx);
+            rooms.insert(room_name, new_room);
         }
     }
 
@@ -67,18 +67,18 @@ fn user_connected(
     })
 }
 
-fn user_message(tenant_name: String, my_id: usize, msg: String, users: &Users) {
+fn user_message(room_name: String, my_id: usize, msg: String, users: &Users) {
     let new_msg = format!("<User#{}>: {}", my_id, msg);
 
     // New message from this user, send it to everyone else (except same uid)...
     //
     // We use `retain` instead of a for loop so that we can reap any user that
     // appears to have disconnected.
-    let mut tenants = users.lock().unwrap();
-    let tenant = tenants.get_mut(&tenant_name);
-    match tenant {
-        Some(tenant) => {
-            tenant.retain(|uid, tx| {
+    let mut rooms = users.lock().unwrap();
+    let room = rooms.get_mut(&room_name);
+    match room {
+        Some(room) => {
+            room.retain(|uid, tx| {
                 if my_id == *uid {
                     // don't send to same user, but do retain
                     true
@@ -104,8 +104,8 @@ async fn main() {
     // Turn our "state" into a new Filter...
     let users = warp::any().map(move || users.clone());
 
-    // POST /tenant/:name/chat -> send message
-    let chat_send = warp::path!("tenant" / String / "chat" / usize)
+    // POST /room/:name/send -> send message
+    let chat_send = warp::path!("room" / String / "send" / usize)
         .and(warp::post())
         .and(warp::body::content_length_limit(500))
         .and(warp::body::bytes().and_then(|body: Bytes| async move {
@@ -114,23 +114,23 @@ async fn main() {
                 .map_err(|_e| warp::reject::custom(NotUtf8))
         }))
         .and(users.clone())
-        .map(|tenant_name, my_id, msg, users| {
-            user_message(tenant_name, my_id, msg, &users);
+        .map(|room_name, my_id, msg, users| {
+            user_message(room_name, my_id, msg, &users);
             warp::reply()
         });
 
-    // GET /tenant/:name/chat -> messages stream
-    let chat_recv = warp::path!("tenant" / String / "chat")
+    // GET /room/:name/listen -> messages stream
+    let chat_recv = warp::path!("room" / String / "listen")
         .and(warp::get())
         .and(users)
-        .map(|tenant_name, users| {
+        .map(|room_name, users| {
             // reply using server-sent events
-            let stream = user_connected(tenant_name, users);
+            let stream = user_connected(room_name, users);
             warp::sse::reply(warp::sse::keep_alive().stream(stream))
         });
 
-    // GET /tenant/:name -> chat html
-    let tenant = warp::path!("tenant" / String).map(|_| {
+    // GET /room/:name -> chat html
+    let room = warp::path!("room" / String).map(|_| {
         warp::http::Response::builder()
             .header("content-type", "text/html; charset=utf-8")
             .body(CHAT_HTML)
@@ -143,12 +143,12 @@ async fn main() {
             .body(INDEX_HTML)
     });
 
-    let routes = index.or(tenant).or(chat_recv).or(chat_send);
+    let routes = index.or(room).or(chat_recv).or(chat_send);
 
-    warp::serve(routes).run(([127, 0, 0, 1], 3000)).await;
+    warp::serve(routes).run(([127, 0, 0, 1], 5050)).await;
 }
 
-static INDEX_HTML: &str = r#"
+static INDEX_HTML: &str = r#" 
 <!DOCTYPE html>
 <html>
     <head>
@@ -159,13 +159,13 @@ static INDEX_HTML: &str = r#"
         <script>
         function onSubmit() {
             setTimeout(() => {
-                location.href="/tenant/"+document.getElementById("name").value;
+                location.href="/room/"+document.getElementById("name").value;
             },10 );
             return false;
         }
         </script>
         <form onsubmit="onSubmit()">
-            <input id="name" type="text" placeholder="tenant name" />
+            <input id="name" type="text" placeholder="room name" />
             <input type="submit">
         </form>
     </body>
@@ -186,8 +186,8 @@ static CHAT_HTML: &str = r#"
         <input type="text" id="text" />
         <button type="button" id="send">Send</button>
         <script type="text/javascript">
-        var uri = 'http://' + location.host + location.pathname + '/chat';
-        var sse = new EventSource(uri);
+        var uri = 'http://' + location.host + location.pathname;
+        var sse = new EventSource(uri + '/listen');
         function message(data) {
             var line = document.createElement('p');
             line.innerText = data;
@@ -206,7 +206,7 @@ static CHAT_HTML: &str = r#"
         send.onclick = function() {
             var msg = text.value;
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", uri + '/' + user_id, true);
+            xhr.open("POST", uri + '/send/' + user_id, true);
             xhr.send(msg);
             text.value = '';
             message('<You>: ' + msg);

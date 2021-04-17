@@ -30,7 +30,8 @@ app.post('/:channelId/send', (req, res, next) => {
 	return res.send('ok');
 });
 
-app.get('/:channelId/listen', function(req, res) {
+// GET /room/:name/listen -> messages stream
+ app.get('/room/:channelId/listen', function(req, res) {
 	res.writeHead(200, {
 		'Content-Type': 'text/event-stream',
 		Connection: 'keep-alive',
