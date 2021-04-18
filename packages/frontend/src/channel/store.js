@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
 
-export const createChannelStore = (channelId) => {
+export const createChannelStore = (roomId) => {
 	const { subscribe, set, update } = writable([]);
 
-	const eventSource = new EventSource(`http://localhost:3000/room/${channelId}/listen`);
+	const eventSource = new EventSource(`http://localhost:3000/room/${roomId}/listen`);
 
 	eventSource.onmessage = (e) => {
 		update((messages) => messages.concat(JSON.parse(e.data)));

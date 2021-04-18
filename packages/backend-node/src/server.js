@@ -3,49 +3,49 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const channels = {};
+const rooms = {};
 
-function sendEventsToAll(event, channelId) {
-	if (!channels[channelId]) {
-		channels[channelId] = [];
+function sendEventsToAll(event, roomId) {
+	if (!rooms[roomId]) {
+		rooms[roomId] = [];
 	}
 
-	channels[channelId].forEach((c) => c.res.write(`data: ${JSON.stringify(event)}\n\n`));
+	rooms[roomId].forEach((c) => c.res.write(`data: ${JSON.stringify(event)}\n\n`));
 }
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/:channelId/send', (req, res, next) => {
-	const { channelId } = req.params;
+app.post('/:roomId/send', (req, res, next) => {
+	const { roomId } = req.params;
 	sendEventsToAll(
 		{
 			message: '[nodejs] ' + req.body.message,
 			username: req.body.username,
 			time: req.body.time
 		},
-		channelId
+		roomId
 	);
 	return res.send('ok');
 });
 
 // GET /room/:name/listen -> messages stream
- app.get('/room/:channelId/listen', function(req, res) {
+app.get('/room/:roomId/listen', function(req, res) {
 	res.writeHead(200, {
 		'Content-Type': 'text/event-stream',
 		Connection: 'keep-alive',
 		'Cache-Control': 'no-cache'
 	});
 
-	const { channelId } = req.params;
+	const { roomId } = req.params;
 	const clientId = Date.now();
 
-	if (!channels[channelId]) {
-		channels[channelId] = [];
+	if (!rooms[roomId]) {
+		rooms[roomId] = [];
 	}
 
-	channels[channelId].push({
+	rooms[roomId].push({
 		id: clientId,
 		res
 	});
@@ -62,7 +62,7 @@ app.post('/:channelId/send', (req, res, next) => {
 
 	req.on('close', () => {
 		console.log(`${clientId} Connection closed`);
-		channels[channelId] = channels[channelId].filter((c) => c.id !== clientId);
+		rooms[roomId] = rooms[roomId].filter((c) => c.id !== clientId);
 	});
 });
 

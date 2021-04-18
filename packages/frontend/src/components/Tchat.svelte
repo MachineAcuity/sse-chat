@@ -20,7 +20,7 @@ const getUsername = querystring => {
     return match ? match[1] : null;
 };
 
-export let channelId;
+export let roomId;
 let messages = [];
 let username = getUsername($querystring) || "Unknown";
 
@@ -37,7 +37,7 @@ afterUpdate(() => {
 });
 
 const handleSendMessage = async e => {
-    await fetch(`http://localhost:3000/${channelId}/send`, {
+    await fetch(`http://localhost:3000/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
             username,
@@ -51,7 +51,7 @@ const handleSendMessage = async e => {
 };
 
 onMount(() => {
-    const store = createChannelStore(channelId);
+    const store = createChannelStore(roomId);
 
     store.subscribe(incomingMessages => {
         messages = incomingMessages;
@@ -93,7 +93,7 @@ onMount(() => {
 </style>
 
 <div class="root">
-    <TchatHeader title={`Chat on ${channelId}`} messageCount={messages.length} />
+    <TchatHeader title={`Chat on ${roomId}`} messageCount={messages.length} />
     <div class="history" bind:this={div}>
         <ul>
             {#each messages as message, i}

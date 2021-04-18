@@ -3,11 +3,11 @@ import {
     push
 } from "svelte-spa-router";
 
-let channelId = "";
+let roomId = "";
 let username = "";
 
 const handleJoin = () => {
-    push(`/channel/${channelId}?user=${username}`);
+    push(`/room/${roomId}?user=${username}`);
 };
 </script>
 
@@ -15,7 +15,7 @@ const handleJoin = () => {
 <div>
     <div>
         <span>Channel</span>
-        <input bind:value={channelId} type="text" />
+        <input bind:value={roomId} type="text" />
     </div>
     <div>
         <span>Username</span>

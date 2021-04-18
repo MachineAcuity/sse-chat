@@ -5,7 +5,7 @@ import Channel from "./routes/Channel.svelte";
 
 const routes = {
     "/": Home,
-    "/channel/:id": Channel
+    "/room/:id": Channel
 };
 </script>
 
