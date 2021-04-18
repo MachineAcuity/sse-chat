@@ -1,5 +1,5 @@
 use futures::{Stream, StreamExt};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{
     atomic::{AtomicUsize, Ordering},
@@ -20,7 +20,7 @@ enum Message {
     Reply(String),
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct PostedMessage {
     pub message: String,
     pub user_id: usize,
@@ -77,9 +77,6 @@ fn user_connected(
 }
 
 fn user_message(room_name: String, posted_message: PostedMessage, users: &Users) {
-    let new_msg = posted_message.message;
-    let user_id = posted_message.user_id;
-
     // New message from this user, send it to everyone else (except same uid)...
     //
     // We use `retain` instead of a for loop so that we can reap any user that
@@ -89,12 +86,17 @@ fn user_message(room_name: String, posted_message: PostedMessage, users: &Users)
     match room {
         Some(room) => {
             room.retain(|uid, tx| {
-                if user_id == *uid {
+                if posted_message.user_id == *uid {
                     // don't send to same user, but do retain
                     true
                 } else {
+                    let response = match serde_json::to_string(&posted_message){
+                        Ok(str) => str,
+                        Err(_) => "{\"user_id\": 0, \"message\": Something went wrong, \"time\": 0, }".to_string()
+                    };
+                   
                     // If not `is_ok`, the SSE stream is gone, and so don't retain
-                    tx.send(Message::Reply(new_msg.clone())).is_ok()
+                    tx.send(Message::Reply(response)).is_ok()
                 }
             });
         }
