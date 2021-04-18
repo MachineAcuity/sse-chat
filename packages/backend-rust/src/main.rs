@@ -188,7 +188,7 @@ static CHAT_HTML: &str = r#"
             user_id = msg.data;
         });
         sse.onmessage = function(msg) {
-            message(msg.data);
+            message(JSON.parse(msg.data).message);
         };
         send.onclick = async e => {
             var msg = text.value;
