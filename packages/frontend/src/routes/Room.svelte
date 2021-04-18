@@ -11,5 +11,5 @@ export let params = {};
 </style>
 
 <div class="root">
-    <Tchat roomId={params.id} />
+    <Tchat roomId={params.room_id} />
 </div>

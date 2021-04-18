@@ -1,11 +1,11 @@
 <script>
 import Router from "svelte-spa-router";
 import Home from "./routes/Home.svelte";
-import Channel from "./routes/Channel.svelte";
+import Room from "./routes/Room.svelte";
 
 const routes = {
     "/": Home,
-    "/room/:id": Channel
+    "/room/:room_id": Room
 };
 </script>
 
