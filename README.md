@@ -8,6 +8,38 @@ SSE chat with Rust and Svelte.
 npm install
 ```
 
+## Development
+
+Start the backend
+
+```
+npm run dev-backend
+```
+
+Start the frontend
+
+```
+(cd frontend && npm run dev)
+```
+
+Access development server at `http://localhost:5000/`.
+
+## Build
+
+Build frontend, backend, and update backend with latest frontend files
+
+```
+npm run build-all
+```
+
+Start with
+
+```
+npm run start-all
+```
+
+Access built server at `http://localhost:5050/`.
+
 ## Attribution
 
 * The original repository is for the article [Building A Chat Application Using SvelteJS and SSE](https://marmelab.com/blog/2020/10/02/build-a-chat-application-using-sveltejs-and-sse.html) by [jdemangeon](https://github.com/jdemangeon) Julien Demangeon.

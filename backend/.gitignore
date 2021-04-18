@@ -4,4 +4,4 @@
 
 # Web app - public files and rollup build
 #
-public/
+public/*

@@ -4,10 +4,9 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"run-backend": "cd backend/ && cargo run",
-		"build-all": "(cd backend/ && cargo build) & (cd frontend && npm run build && cp -R public/ ../backend/public)"
+		"build-all": "(cd backend/ && cargo build) & (cd frontend && npm run build && cp -R public/ ../backend/public)",
+		"dev-backend": "cd backend/ && rm -rf public/* && cargo run",
+		"start-all": "cd backend/ && cargo run"
 	},
-	"workspaces": [
-		"frontend"
-	]
+	"workspaces": [ "frontend" ]
 }
