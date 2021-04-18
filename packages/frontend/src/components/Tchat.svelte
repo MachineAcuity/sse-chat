@@ -4,9 +4,6 @@ import {
     beforeUpdate,
     afterUpdate
 } from "svelte";
-import {
-    querystring
-} from "svelte-spa-router";
 
 import {
     createChannelStore
