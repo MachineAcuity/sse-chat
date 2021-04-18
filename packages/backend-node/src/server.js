@@ -17,7 +17,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/:roomId/send', (req, res, next) => {
+app.post('/room/:roomId/send', (req, res, next) => {
 	const { roomId } = req.params;
 	sendEventsToAll(req.body, roomId);
 	return res.send('ok');

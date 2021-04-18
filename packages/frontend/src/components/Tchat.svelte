@@ -12,6 +12,8 @@ import Message from "./Message.svelte";
 import TchatHeader from "./TchatHeader.svelte";
 import TchatInput from "./TchatInput.svelte";
 
+import { backendUrl } from '../settings.js';
+
 export let roomId;
 let messages_and_user_id = {
     messages: [],
@@ -31,7 +33,7 @@ afterUpdate(() => {
 });
 
 const handleSendMessage = async e => {
-    await fetch(`http://localhost:3000/${roomId}/send`, {
+    await fetch(`${backendUrl}/room/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
             user_id: messages_and_user_id.user_id,

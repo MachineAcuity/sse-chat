@@ -90,11 +90,14 @@ fn user_message(room_name: String, posted_message: PostedMessage, users: &Users)
                     // don't send to same user, but do retain
                     true
                 } else {
-                    let response = match serde_json::to_string(&posted_message){
+                    let response = match serde_json::to_string(&posted_message) {
                         Ok(str) => str,
-                        Err(_) => "{\"user_id\": 0, \"message\": Something went wrong, \"time\": 0, }".to_string()
+                        Err(_) => {
+                            "{\"user_id\": 0, \"message\": Something went wrong, \"time\": 0, }"
+                                .to_string()
+                        }
                     };
-                   
+
                     // If not `is_ok`, the SSE stream is gone, and so don't retain
                     tx.send(Message::Reply(response)).is_ok()
                 }
@@ -116,6 +119,14 @@ async fn main() {
     // Turn our "state" into a new Filter...
     let users = warp::any().map(move || users.clone());
 
+    // Per https://stackoverflow.com/questions/62107101/how-to-compose-warp-log
+    let cors = warp::cors()
+    .allow_origin("http://localhost:5000")
+    .allow_methods(vec!["GET", "POST"])
+    .allow_headers(vec!["content-type"]);
+
+    let log = warp::log("dashbaord-svc");
+
     // POST /room/:name/send -> send message
     let chat_send = warp::path!("room" / String / "send")
         .and(warp::post())
@@ -125,7 +136,9 @@ async fn main() {
         .map(|room_name, posted_message: PostedMessage, users| {
             user_message(room_name, posted_message, &users);
             warp::reply()
-        });
+        })
+        .with(&cors)
+        .with(log);
 
     // GET /room/:name/listen -> messages stream
     let chat_recv = warp::path!("room" / String / "listen")
@@ -135,7 +148,9 @@ async fn main() {
             // reply using server-sent events
             let stream = user_connected(room_name, users);
             warp::sse::reply(warp::sse::keep_alive().stream(stream))
-        });
+        })
+        .with(&cors)
+        .with(log);
 
     // GET /room/:name -> chat html
     let room = warp::path!("room" / String).map(|_| {
