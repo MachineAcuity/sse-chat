@@ -121,11 +121,11 @@ async fn main() {
 
     // Per https://stackoverflow.com/questions/62107101/how-to-compose-warp-log
     let cors = warp::cors()
-    .allow_origin("http://localhost:5000")
-    .allow_methods(vec!["GET", "POST"])
-    .allow_headers(vec!["content-type"]);
+        .allow_origins(vec!["http://localhost:5000", "http://localhost:5050"])
+        .allow_methods(vec!["GET", "POST"])
+        .allow_headers(vec!["content-type"]);
 
-    let log = warp::log("dashbaord-svc");
+    let log = warp::log("svelte-see-chat");
 
     // POST /room/:name/send -> send message
     let chat_send = warp::path!("room" / String / "send")
@@ -141,7 +141,7 @@ async fn main() {
         .with(log);
 
     // GET /room/:name/listen -> messages stream
-    let chat_recv = warp::path!("room" / String / "listen")
+    let chat_listen = warp::path!("room" / String / "listen")
         .and(warp::get())
         .and(users)
         .map(|room_name, users| {
@@ -152,77 +152,16 @@ async fn main() {
         .with(&cors)
         .with(log);
 
-    // GET /room/:name -> chat html
-    let room = warp::path!("room" / String).map(|_| {
-        warp::http::Response::builder()
-            .header("content-type", "text/html; charset=utf-8")
-            .body(CHAT_HTML)
-    });
-
     // GET public static files and index
     const PUBLIC_DIR: &str = "./public";
     let public_files = warp::fs::dir(PUBLIC_DIR);
-    let public_files_index = warp::fs::file(format!("{}/index.html", PUBLIC_DIR));
+    // TODO: Enable index file but also provide a way to catch errors (this implementation does not)
+    //let public_files_index = warp::fs::file(format!("{}/index.html", PUBLIC_DIR));
 
     // Combine all routes
-    let routes = room
-        .or(chat_recv)
-        .or(chat_send)
-        .or(public_files)
-        .or(public_files_index);
+    let routes = chat_listen.or(chat_send).or(public_files);
+    // TODO: Enable index file but also provide a way to catch errors (this implementation does not)
+    //.or(public_files_index)
 
     warp::serve(routes).run(([127, 0, 0, 1], 5050)).await;
 }
-
-static CHAT_HTML: &str = r#"
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Warp Chat</title>
-    </head>
-    <body>
-        <h1>warp chat</h1>
-        <div id="chat">
-            <p><em>Connecting...</em></p>
-        </div>
-        <input type="text" id="text" />
-        <button type="button" id="send">Send</button>
-        <script type="text/javascript">
-        var uri = 'http://' + location.host + location.pathname;
-        var sse = new EventSource(uri + '/listen');
-        function message(data) {
-            var line = document.createElement('p');
-            line.innerText = data;
-            chat.appendChild(line);
-        }
-        sse.onopen = function() {
-            chat.innerHTML = "<p><em>Connected!</em></p>";
-        }
-        var user_id;
-        sse.addEventListener("user", function(msg) {
-            user_id = msg.data;
-        });
-        sse.onmessage = function(msg) {
-            message(JSON.parse(msg.data).message);
-        };
-        send.onclick = async e => {
-            var msg = text.value;
-            user_id = parseInt (user_id, 10);
-            await fetch(uri + '/send', {
-                body: JSON.stringify({
-                    message: msg,
-                    user_id,
-                    time: Date.now()
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                method: "POST"
-            });
-            text.value = '';
-            message('<You>: ' + msg);
-        };
-        </script>
-    </body>
-</html>
-"#;

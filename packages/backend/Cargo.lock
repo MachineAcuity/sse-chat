@@ -27,21 +27,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
-name = "backend-rust"
-version = "0.1.0"
-dependencies = [
- "futures",
- "log",
- "parking_lot",
- "pretty_env_logger",
- "serde",
- "serde_json",
- "tokio",
- "tokio-stream",
- "warp",
-]
-
-[[package]]
 name = "base64"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -883,6 +868,21 @@ checksum = "9e3dfc207c526015c632472a77be09cf1b6e46866581aecae5cc38fb4235dea2"
 dependencies = [
  "libc",
  "winapi",
+]
+
+[[package]]
+name = "svelte-sse-chat-backend"
+version = "0.1.0"
+dependencies = [
+ "futures",
+ "log",
+ "parking_lot",
+ "pretty_env_logger",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+ "warp",
 ]
 
 [[package]]

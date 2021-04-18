@@ -1,9 +1,11 @@
 {
-  "title": "sveltejs-sse-tchat",
-  "description": "Realtime Tchat Application using SvelteJS And Server Sent Events",
-  "version": "0.0.1",
-  "private": true,
-  "workspaces": [
-    "packages/**"
-  ]
+	"title": "sveltejs-sse-chat",
+	"description": "Realtime Tchat Application using SvelteJS And Server Sent Events",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev-backend": "packages/backend/cargo run",
+		"build-all": "(cd packages/backend/ && cargo build) & (cd packages/frontend && npm run build && cp -R public/ ../backend/public)"
+	},
+	"workspaces": [ "packages/**" ]
 }

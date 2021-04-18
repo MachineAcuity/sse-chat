@@ -3,6 +3,6 @@
 node_modules/
 npm-debug.log
 
-# Rollup
+# Web app rollup build
 #
 build/

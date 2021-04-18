@@ -1,5 +1,5 @@
 [package]
-name = "backend-rust"
+name = "svelte-sse-chat-backend"
 version = "0.1.0"
 authors = ["Aleksandar Chalakov <a.chalakov@codefoundries.com>"]
 edition = "2018"

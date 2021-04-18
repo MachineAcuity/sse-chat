@@ -1,0 +1,7 @@
+# Cargo build
+#
+/target
+
+# Web app - public files and rollup build
+#
+public/
