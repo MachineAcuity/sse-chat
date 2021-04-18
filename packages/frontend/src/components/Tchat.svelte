@@ -15,14 +15,11 @@ import Message from "./Message.svelte";
 import TchatHeader from "./TchatHeader.svelte";
 import TchatInput from "./TchatInput.svelte";
 
-const getUsername = querystring => {
-    const match = querystring.match(/user=([^&]*)/);
-    return match ? match[1] : null;
-};
-
 export let roomId;
-let messages = [];
-let username = getUsername($querystring) || "Unknown";
+let messages_and_user_id = {
+    messages: [],
+    user_id: 1
+}
 
 let div;
 let autoscroll;
@@ -40,7 +37,7 @@ const handleSendMessage = async e => {
     await fetch(`http://localhost:3000/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
-            username,
+            user_id: messages_and_user_id.user_id,
             time: Date.now()
         }),
         headers: {
@@ -53,8 +50,8 @@ const handleSendMessage = async e => {
 onMount(() => {
     const store = createChannelStore(roomId);
 
-    store.subscribe(incomingMessages => {
-        messages = incomingMessages;
+    store.subscribe(incoming_messages_and_user_id => {
+        messages_and_user_id = incoming_messages_and_user_id;
     });
 
     return store.close;
@@ -93,10 +90,10 @@ onMount(() => {
 </style>
 
 <div class="root">
-    <TchatHeader title={`Chat on ${roomId}`} messageCount={messages.length} />
+    <TchatHeader title={`Chat on ${roomId} as ${messages_and_user_id.user_id}`} messageCount={messages_and_user_id.messages.length} />
     <div class="history" bind:this={div}>
         <ul>
-            {#each messages as message, i}
+            {#each messages_and_user_id.messages as message, i}
             <li class="clearfix">
                 <Message alignRight={i % 2} {message} />
             </li>

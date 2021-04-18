@@ -1,7 +1,7 @@
 <script>
 export let alignRight = false;
 export let message = {
-    username: "Unknown",
+    user_id: 0,
     message: "",
     time: Date.now()
 };
@@ -71,7 +71,7 @@ export let message = {
             {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
         </span>
         &nbsp; &nbsp;
-        <span>{message.username}</span>
+        <span>{message.user_id}</span>
     </div>
     <div class="message other-message float-right">{message.message}</div>
 </div>
@@ -79,7 +79,7 @@ export let message = {
 <div>
     <div class="root">
         <span>
-            {message.username}
+            {message.user_id}
         </span>
         <span class="time">
             {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}

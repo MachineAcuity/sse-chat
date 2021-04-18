@@ -22,7 +22,7 @@ app.post('/:roomId/send', (req, res, next) => {
 	sendEventsToAll(
 		{
 			message: '[nodejs] ' + req.body.message,
-			username: req.body.username,
+			user_id: req.body.user_id,
 			time: req.body.time
 		},
 		roomId
@@ -50,15 +50,17 @@ app.get('/room/:roomId/listen', function(req, res) {
 		res
 	});
 
-	const data = `data: ${JSON.stringify([
+	const userData = `event: user\ndata: ${clientId}\n\n`;
+	res.write(userData);
+
+	const firstMessageData = `data: ${JSON.stringify([
 		{
-			username: 'Bot',
+			user_id: 0,
 			message: 'Welcome! Happy to see you ;)',
 			time: Date.now()
 		}
 	])}\n\n`;
-
-	res.write(data);
+	res.write(firstMessageData);
 
 	req.on('close', () => {
 		console.log(`${clientId} Connection closed`);
