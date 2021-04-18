@@ -23,7 +23,7 @@ enum Message {
 #[derive(Deserialize, Debug)]
 struct PostedMessage {
     pub message: String,
-    pub user_id: String,
+    pub user_id: usize,
     pub time: i64,
 }
 
@@ -76,8 +76,9 @@ fn user_connected(
     })
 }
 
-fn user_message(room_name: String, my_id: usize, posted_message: PostedMessage, users: &Users) {
+fn user_message(room_name: String, posted_message: PostedMessage, users: &Users) {
     let new_msg = posted_message.message;
+    let user_id = posted_message.user_id;
 
     // New message from this user, send it to everyone else (except same uid)...
     //
@@ -88,7 +89,7 @@ fn user_message(room_name: String, my_id: usize, posted_message: PostedMessage, 
     match room {
         Some(room) => {
             room.retain(|uid, tx| {
-                if my_id == *uid {
+                if user_id == *uid {
                     // don't send to same user, but do retain
                     true
                 } else {
@@ -114,13 +115,13 @@ async fn main() {
     let users = warp::any().map(move || users.clone());
 
     // POST /room/:name/send -> send message
-    let chat_send = warp::path!("room" / String / "send" / usize)
+    let chat_send = warp::path!("room" / String / "send")
         .and(warp::post())
         .and(warp::body::content_length_limit(5 * 1024))
         .and(warp::body::json())
         .and(users.clone())
-        .map(|room_name, my_id, posted_message: PostedMessage, users| {
-            user_message(room_name, my_id, posted_message, &users);
+        .map(|room_name, posted_message: PostedMessage, users| {
+            user_message(room_name, posted_message, &users);
             warp::reply()
         });
 
@@ -189,7 +190,8 @@ static CHAT_HTML: &str = r#"
         };
         send.onclick = async e => {
             var msg = text.value;
-            await fetch(uri + '/send/' + user_id, {
+            user_id = parseInt (user_id, 10);
+            await fetch(uri + '/send', {
                 body: JSON.stringify({
                     message: msg,
                     user_id,
