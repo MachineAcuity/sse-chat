@@ -871,7 +871,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "svelte-sse-chat-backend"
+name = "sse-chat-backend"
 version = "0.1.0"
 dependencies = [
  "futures",

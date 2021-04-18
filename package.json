@@ -1,5 +1,5 @@
 {
-	"title": "sveltejs-sse-chat",
+	"title": "sse-chat",
 	"description": "Realtime Tchat Application using SvelteJS And Server Sent Events",
 	"version": "0.0.1",
 	"private": true,
