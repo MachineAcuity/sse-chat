@@ -19,14 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/:roomId/send', (req, res, next) => {
 	const { roomId } = req.params;
-	sendEventsToAll(
-		{
-			message: '[nodejs] ' + req.body.message,
-			user_id: req.body.user_id,
-			time: req.body.time
-		},
-		roomId
-	);
+	sendEventsToAll(req.body, roomId);
 	return res.send('ok');
 });
 
@@ -53,13 +46,11 @@ app.get('/room/:roomId/listen', function(req, res) {
 	const userData = `event: user\ndata: ${clientId}\n\n`;
 	res.write(userData);
 
-	const firstMessageData = `data: ${JSON.stringify([
-		{
-			user_id: 0,
-			message: 'Welcome! Happy to see you ;)',
-			time: Date.now()
-		}
-	])}\n\n`;
+	const firstMessageData = `data: ${JSON.stringify({
+		user_id: 0,
+		message: 'Welcome! Happy to see you ;)',
+		time: Date.now()
+	})}\n\n`;
 	res.write(firstMessageData);
 
 	req.on('close', () => {

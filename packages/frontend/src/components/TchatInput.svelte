@@ -18,10 +18,10 @@ const handleSubmit = () => {
 
 function handleKeyPress(event) {
     var keyCode = event.code || event.key;
-    if (keyCode == 'Enter'){
+    if (keyCode == 'Enter') {
         handleSubmit();
     }
-  }
+}
 </script>
 
 <style>
@@ -44,11 +44,9 @@ textarea {
     border-radius: 5px;
     resize: none;
 }
-
-
 </style>
 
 <div class="root">
     <textarea bind:value placeholder="Type your message" rows="3"  on:keypress={handleKeyPress}/>
-    <img src="data:image/svg+xml;utf8,{Svg}" alt="Send" on:click={handleSubmit}/>
-</div>
+        <img src="data:image/svg+xml;utf8,{Svg}" alt="Send" on:click={handleSubmit}/>
+        </div>
