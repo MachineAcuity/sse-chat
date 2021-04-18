@@ -1,6 +1,6 @@
 ## Introduction
 
-This repository is an experiment with a chat application with Svelte, Rust and deployment on DO.
+SSE chat with Rust and Svelte.
 
 ## Attribution
 
@@ -10,4 +10,4 @@ This repository is an experiment with a chat application with Svelte, Rust and d
 
 ## Improvements
 
-* TODO: Investigate removing `workspaces` from main package.json.
+* TODO: Place next tasks here.

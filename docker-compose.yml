@@ -9,7 +9,7 @@ services:
 
   frontend:
     image: node:15-stretch
-    working_dir: "/app/packages/frontend"
+    working_dir: "/app/frontend"
     command: npm run dev
     user: "${UID}:${GID}"
     ports:
@@ -20,7 +20,7 @@ services:
 
   backend:
     image: node:15-stretch
-    working_dir: "/app/packages/backend"
+    working_dir: "/app/backend"
     user: "${UID}:${GID}"
     command: npm run dev
     ports:
