@@ -35,6 +35,7 @@ dependencies = [
  "parking_lot",
  "pretty_env_logger",
  "serde",
+ "serde_json",
  "tokio",
  "tokio-stream",
  "warp",

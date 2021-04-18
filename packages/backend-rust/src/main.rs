@@ -1,4 +1,5 @@
 use futures::{Stream, StreamExt};
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::sync::{
     atomic::{AtomicUsize, Ordering},
@@ -6,7 +7,8 @@ use std::sync::{
 };
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use warp::{hyper::body::Bytes, sse::Event, Filter};
+use warp::{sse::Event, Filter};
+// hyper::body::Bytes
 
 /// Our global unique user id counter.
 static NEXT_USER_ID: AtomicUsize = AtomicUsize::new(1);
@@ -16,6 +18,13 @@ static NEXT_USER_ID: AtomicUsize = AtomicUsize::new(1);
 enum Message {
     UserId(usize),
     Reply(String),
+}
+
+#[derive(Deserialize, Debug)]
+struct PostedMessage {
+    pub message: String,
+    pub user_id: String,
+    pub time: i64,
 }
 
 #[derive(Debug)]
@@ -67,8 +76,8 @@ fn user_connected(
     })
 }
 
-fn user_message(room_name: String, my_id: usize, msg: String, users: &Users) {
-    let new_msg = format!("<User#{}>: {}", my_id, msg);
+fn user_message(room_name: String, my_id: usize, posted_message: PostedMessage, users: &Users) {
+    let new_msg = posted_message.message;
 
     // New message from this user, send it to everyone else (except same uid)...
     //
@@ -107,15 +116,11 @@ async fn main() {
     // POST /room/:name/send -> send message
     let chat_send = warp::path!("room" / String / "send" / usize)
         .and(warp::post())
-        .and(warp::body::content_length_limit(500))
-        .and(warp::body::bytes().and_then(|body: Bytes| async move {
-            std::str::from_utf8(&body)
-                .map(String::from)
-                .map_err(|_e| warp::reject::custom(NotUtf8))
-        }))
+        .and(warp::body::content_length_limit(5 * 1024))
+        .and(warp::body::json())
         .and(users.clone())
-        .map(|room_name, my_id, msg, users| {
-            user_message(room_name, my_id, msg, &users);
+        .map(|room_name, my_id, posted_message: PostedMessage, users| {
+            user_message(room_name, my_id, posted_message, &users);
             warp::reply()
         });
 
@@ -182,11 +187,19 @@ static CHAT_HTML: &str = r#"
         sse.onmessage = function(msg) {
             message(msg.data);
         };
-        send.onclick = function() {
+        send.onclick = async e => {
             var msg = text.value;
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", uri + '/send/' + user_id, true);
-            xhr.send(msg);
+            await fetch(uri + '/send/' + user_id, {
+                body: JSON.stringify({
+                    message: msg,
+                    user_id,
+                    time: Date.now()
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "POST"
+            });
             text.value = '';
             message('<You>: ' + msg);
         };
