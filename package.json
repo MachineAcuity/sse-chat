@@ -7,5 +7,7 @@
 		"run-backend": "cd backend/ && cargo run",
 		"build-all": "(cd backend/ && cargo build) & (cd frontend && npm run build && cp -R public/ ../backend/public)"
 	},
-	"workspaces": [ "frontend" ]
+	"workspaces": [
+		"frontend"
+	]
 }
