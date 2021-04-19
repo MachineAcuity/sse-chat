@@ -1,6 +1,7 @@
 use futures::{Stream, StreamExt};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::env;
 use std::sync::{
     atomic::{AtomicUsize, Ordering},
     Arc, Mutex,
@@ -8,7 +9,12 @@ use std::sync::{
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{sse::Event, Filter};
-// hyper::body::Bytes
+
+/// Port for serving
+const PORT_SERVER: u16 = 5050;
+
+/// If environment variable for CORS allowed origin is not provided, use default for frontend development (dev)
+const CORS_ALLOW_ORIGIN_DEFAULT: &str = "http://localhost:5000";
 
 /// Our global unique user id counter.
 static NEXT_USER_ID: AtomicUsize = AtomicUsize::new(1);
@@ -20,6 +26,7 @@ enum Message {
     Reply(String),
 }
 
+// Message sent from client
 #[derive(Serialize, Deserialize, Debug)]
 struct PostedMessage {
     pub message: String,
@@ -116,16 +123,25 @@ async fn main() {
     // Keep track of all connected users, key is usize, value
     // is an event stream sender.
     let users = Arc::new(Mutex::new(HashMap::new()));
+
     // Turn our "state" into a new Filter...
     let users = warp::any().map(move || users.clone());
 
-    // Per https://stackoverflow.com/questions/62107101/how-to-compose-warp-log
+    // Determine CORS allowed origin
+    let allow_origin :String= match env::var("CORS_ALLOW_ORIGIN") {
+        Ok(allowed_origin) => allowed_origin,
+        Err(_) => CORS_ALLOW_ORIGIN_DEFAULT.to_string(),
+    };
+    println!("CORS allow origin: {}", allow_origin);
+
+    // Set up CORS
     let cors = warp::cors()
-        .allow_origins(vec!["http://localhost:5000", "http://localhost:5050"])
+        .allow_origin(&*allow_origin)
         .allow_methods(vec!["GET", "POST"])
         .allow_headers(vec!["content-type"]);
 
-    let log = warp::log("svelte-see-chat");
+    // TODO Implement backend logging
+    let log = warp::log("see-chat");
 
     // POST /room/:name/send -> send message
     let chat_send = warp::path!("room" / String / "send")
@@ -163,5 +179,5 @@ async fn main() {
     // TODO: Enable index file but also provide a way to catch errors (this implementation does not)
     //.or(public_files_index)
 
-    warp::serve(routes).run(([127, 0, 0, 1], 5050)).await;
+    warp::serve(routes).run(([127, 0, 0, 1], PORT_SERVER)).await;
 }
