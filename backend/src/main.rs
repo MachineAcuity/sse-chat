@@ -179,5 +179,5 @@ async fn main() {
     // TODO: Enable index file but also provide a way to catch errors (this implementation does not)
     //.or(public_files_index)
 
-    warp::serve(routes).run(([127, 0, 0, 1], PORT_SERVER)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], PORT_SERVER)).await;
 }
