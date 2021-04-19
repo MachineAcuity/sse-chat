@@ -61,3 +61,4 @@ Access build server at `http://localhost:5050/`.
 * TODO: Use ENV variables to set up CORS.
 * TODO: Investigate switching to type script.
 * TODO: Switch to Tailwind CSS.
+* TODO: Switch to SvelteKit.
