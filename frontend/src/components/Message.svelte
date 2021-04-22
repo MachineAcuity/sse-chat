@@ -15,7 +15,7 @@ export let message = {
 .time {
     color: #a8aab1;
     padding-left: 6px;
-}
+} 
 
 .message {
     color: white;

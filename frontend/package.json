@@ -1,14 +1,11 @@
 {
 	"name": "sse-chat-frontend",
 	"version": "1.0.0",
-	"scripts": {
-		"build": "rollup -c",
-		"dev": "rollup -c -w",
-		"dev-server": "sirv --host 0.0.0.0 public"
-	},
+	"scripts": {},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "18.0.0",
 		"@rollup/plugin-node-resolve": "11.2.1",
+		"@rollup/plugin-replace": "2.4.2",
 		"autoprefixer": "10.2.5",
 		"concurrently": "6.0.2",
 		"postcss-cli": "8.3.1",
@@ -20,6 +17,5 @@
 		"svelte": "3.37.0",
 		"svelte-spa-router": "3.1.0",
 		"tailwindcss": "2.1.1"
-	},
-	"dependencies": {}
+	}
 }

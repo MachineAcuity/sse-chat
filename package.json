@@ -4,12 +4,19 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"build-all": "(cd backend/ && cargo build) & (cd frontend && npm run build && cp -R public/ ../backend/public)",
-		"dev-backend": "cd backend/ && rm -rf public/* && cargo run",
-		"start-all": "cd backend/ && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run"
+		"build-all": "(cd backend && cargo build) & (npm run build-rollup && npm run build-tailwind && cp -R frontend/public/ backend/public)",
+		"build-rollup": "(cd frontend && rollup -c)",
+		"build-tailwind": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css)",
+		"dev-all": "concurrently --names 'WWW  ,rust ,roll ,tail ' --prefix-colors 'white,yellow,green,cyan' --prefix '{time}-{pid} {name}' 'npm run dev-frontend-server' 'npm run dev-backend' 'npm run dev-frontend-rollup' 'npm run dev-frontend-tailwind' --kill-others-on-fail",
+		"dev-backend": "(cd backend && rm -rf public/* && cargo run)",
+		"dev-frontend-server": "sirv --host 0.0.0.0 frontend/public",
+		"dev-frontend-rollup": "(cd frontend && rollup -c -w)",
+		"dev-frontend-tailwind": "(cd frontend && postcss public/tailwind.css -o public/index.css -w)",
+		"start-all": "(cd backend && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run)"
 	},
 	"devDependencies": {
-		"concurrently": "6.0.2"
+		"concurrently": "6.0.2",
+		"sirv-cli": "1.0.11"
 	},
 	"workspaces": [
 		"frontend"

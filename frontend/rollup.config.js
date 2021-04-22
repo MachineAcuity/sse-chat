@@ -3,6 +3,7 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
+import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -61,6 +62,11 @@ export default {
 			browser: true,
 			dedupe: [ 'svelte' ]
 		}),
+
+		replace({
+			IS_PRODUCTION: production
+		}),
+
 		commonjs(),
 
 		// In dev mode, call `npm run start` once
@@ -85,6 +91,7 @@ function serve() {
 
 	return {
 		writeBundle() {
+			/*
 			if (!started) {
 				started = true;
 
@@ -93,6 +100,7 @@ function serve() {
 					shell: true
 				});
 			}
+			*/
 		}
 	};
 }

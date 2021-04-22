@@ -5,6 +5,7 @@ import {
     afterUpdate
 } from "svelte";
 
+import { api_url } from '../API';
 import {
     createChannelStore
 } from "../channel/store";
@@ -31,7 +32,7 @@ afterUpdate(() => {
 });
 
 const handleSendMessage = async e => {
-    await fetch(`/room/${roomId}/send`, {
+    await fetch(api_url +`/room/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
             user_id: messages_and_user_id.user_id,
