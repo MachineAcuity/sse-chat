@@ -66,13 +66,34 @@ Build static executable:
 Create docker image:
 
 ```
-docker build -t sse-chat-backend .
+docker build -t sse-chat:v1.0.1-0 .
 ```
 
 ## Local Docker Run
 
 ```
-docker run --rm --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=http://localhost:5050 sse-chat-backend
+docker run --rm --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=http://localhost:5050 sse-chat:v1.0.1-0
+```
+
+## Digital Ocean Kubernetes
+
+Push local image to DO registry:
+
+```
+docker tag sse-chat:v1.0.1-0 registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.1-0
+docker push registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.1-0
+```
+
+Apply deplyment and service to kubernetes:
+
+```
+kubectl apply -f dok8s.yaml
+```
+
+Verify deployment:
+
+```
+kubectl get pods --watch
 ```
 
 ## Attribution
@@ -85,8 +106,9 @@ docker run --rm --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=htt
 
 ## Improvements
 
-* TODO: Use ENV variables to set up CORS.
-* TODO: Investigate switching to type script.
-* TODO: Switch to Tailwind CSS.
-* TODO: Switch to SvelteKit.
-* TODO: Switch Dockerfile from alpine to scratch (test env!).
+* [DONE] Use ENV variables to set up CORS.
+* TODO:  Investigate switching to type script.
+* TODO:  Switch to Tailwind CSS.
+* TODO:  Switch to SvelteKit (when mature enough).
+* TODO:  Switch Dockerfile from alpine to scratch (maybe).
+* TODO:  Implement container health service check.

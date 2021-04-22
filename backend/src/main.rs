@@ -141,7 +141,7 @@ async fn main() {
         .allow_headers(vec!["content-type"]);
 
     // TODO Implement backend logging
-    let log = warp::log("see-chat");
+    let log = warp::log("sse-chat");
 
     // POST /room/:name/send -> send message
     let chat_send = warp::path!("room" / String / "send")

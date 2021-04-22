@@ -1,11 +1,12 @@
 import { writable } from 'svelte/store';
 
-import { backendUrl } from '../settings.js';
+//import { backendUrl } from '../settings.js';
 
 export const createChannelStore = (roomId) => {
 	const { subscribe, set, update } = writable({ messages: [], user_id: 0 });
 
-	const eventSource = new EventSource(`${backendUrl}/room/${roomId}/listen`);
+	//const eventSource = new EventSource(`${backendUrl}/room/${roomId}/listen`);
+	const eventSource = new EventSource(`/room/${roomId}/listen`);
 
 	eventSource.onmessage = (e) => {
 		console.log(e);
