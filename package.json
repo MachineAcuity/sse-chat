@@ -8,5 +8,10 @@
 		"dev-backend": "cd backend/ && rm -rf public/* && cargo run",
 		"start-all": "cd backend/ && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run"
 	},
-	"workspaces": [ "frontend" ]
+	"devDependencies": {
+		"concurrently": "6.0.2"
+	},
+	"workspaces": [
+		"frontend"
+	]
 }
