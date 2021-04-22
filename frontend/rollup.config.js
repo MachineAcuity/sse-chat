@@ -62,16 +62,15 @@ export default {
 			browser: true,
 			dedupe: [ 'svelte' ]
 		}),
+		commonjs(),
 
 		replace({
 			IS_PRODUCTION: production
 		}),
 
-		commonjs(),
-
-		// In dev mode, call `npm run start` once
-		// the bundle has been generated
-		!production && serve(),
+		// // In dev mode, call `npm run start` once
+		// // the bundle has been generated
+		// !production && serve(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
@@ -86,12 +85,12 @@ export default {
 	}
 };
 
+/*
 function serve() {
 	let started = false;
 
 	return {
 		writeBundle() {
-			/*
 			if (!started) {
 				started = true;
 
@@ -100,7 +99,7 @@ function serve() {
 					shell: true
 				});
 			}
-			*/
 		}
 	};
 }
+			*/
