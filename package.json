@@ -4,9 +4,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"build-all": "(cd backend && cargo build) & (npm run build-rollup && npm run build-tailwind && cp -R frontend/public/ backend/public)",
-		"build-rollup": "(cd frontend && rollup -c)",
-		"build-tailwind": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css)",
+		"build-all": "(cd backend && cargo build) & (npm run build-svelte && cp -R frontend/public/ backend/public)",
+		"build-svelte": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css && rollup -c)",
 		"dev-all": "concurrently --names 'WWW  ,rust ,roll ,tail ' --prefix-colors 'white,yellow,green,cyan' --prefix '{time}-{pid} {name}' 'npm run dev-frontend-server' 'npm run dev-backend' 'npm run dev-frontend-rollup' 'npm run dev-frontend-tailwind' --kill-others-on-fail",
 		"dev-backend": "(cd backend && rm -rf public/* && cargo run)",
 		"dev-frontend-server": "(cd frontend && sirv --dev --host 0.0.0.0 public)",
