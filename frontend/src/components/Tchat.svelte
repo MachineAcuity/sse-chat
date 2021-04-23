@@ -58,14 +58,16 @@ onMount(() => {
 });
 </script>
 
-<div class="container mx-auto shadow-lg rounded-lg">
+<div class="container max-w-2xl shadow-lg rounded-lg">
     <TchatHeader title={`Chat on ${roomId} as ${messages_and_user_id.user_id}`} messageCount={messages_and_user_id.messages.length} />
     <div class="flex flex-row justify-between bg-white">
+        <div class="flex-grow" />
         <div class="w-full px-5 flex flex-col justify-between">
-            <div class="flex flex-col mt-5" bind:this={div}>
+            <div class="flex flex-col mt-5 overflow-y-auto" style="min-height:300px; max-height: calc(100vh - 280px)" bind:this={div}>
                 {#each messages_and_user_id.messages as message, i}
                 <Message alignRight={i % 2} {message} />
            {/each}
+        
           </div>
             <TchatInput on:message={handleSendMessage} />
         </div>
