@@ -10,6 +10,7 @@ Prerequisites:
 * Tested on `Mac OS` only.
 * `Node.js` 14 or higher.
 * `Rust` 1.51 or higher.
+* Set up [rust-musl-builder](https://github.com/emk/rust-musl-builder).
 
 ## Installation
 
@@ -19,18 +20,9 @@ npm install
 
 ## Local Development
 
-Start the backend
-
 ```
-npm run dev-backend
+npm run ::dev-all
 ```
-
-Start the frontend
-
-```
-(cd frontend && npm run dev)
-```
-
 Access development server at `http://localhost:5000/`.
 
 ## Local Build
@@ -38,41 +30,27 @@ Access development server at `http://localhost:5000/`.
 Build frontend, backend, and update backend with latest frontend files
 
 ```
-npm run build-all
+npm run ::build-local
 ```
 
 Start with
 
 ```
-npm run start-all
+npm run ::start-local
 ```
 
-Access build server at `http://localhost:5050/`.
+Access local server at `http://localhost:5050/`.
 
 ## Docker Build
 
-Set up [rust-musl-builder](https://github.com/emk/rust-musl-builder):
-
 ```
-alias rust-musl-builder='docker run --rm -it -v "$(pwd)":/home/rust/src ekidd/rust-musl-builder'
+npm run ::build-docker-all
 ```
 
-Build static executable:
+## Docker Run
 
 ```
-(cd backend && rust-musl-builder cargo build --release)
-```
-
-Create docker image:
-
-```
-docker build -t sse-chat:v1.0.1-0 .
-```
-
-## Local Docker Run
-
-```
-docker run --rm --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=http://localhost:5050 sse-chat:v1.0.1-0
+npm run ::start-docker
 ```
 
 ## Digital Ocean Kubernetes
@@ -80,20 +58,7 @@ docker run --rm --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=htt
 Push local image to DO registry:
 
 ```
-docker tag sse-chat:v1.0.1-0 registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.1-0
-docker push registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.1-0
-```
-
-Apply deplyment and service to kubernetes:
-
-```
-kubectl apply -f dok8s.yaml
-```
-
-Verify deployment:
-
-```
-kubectl get pods --watch
+npm run ::k8s-tag-push-apply
 ```
 
 ## Attribution
@@ -108,9 +73,9 @@ kubectl get pods --watch
 
 ## Improvements
 
-* [DONE] Use ENV variables to set up CORS.
-* [DONE] Switch to Tailwind CSS.
+* TODO:  Implement script for increment on build.
 * TODO:  Investigate switching to type script.
 * TODO:  Switch to SvelteKit (when mature enough).
 * TODO:  Switch Dockerfile from alpine to scratch (maybe).
 * TODO:  Implement container health service check.
+* TODO:  Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/

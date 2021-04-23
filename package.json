@@ -4,14 +4,22 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"build-all": "(cd backend && cargo build) & (npm run build-svelte && cp -R frontend/public/ backend/public)",
-		"build-svelte": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css && rollup -c)",
-		"dev-all": "concurrently --names 'WWW  ,rust ,roll ,tail ' --prefix-colors 'white,yellow,green,cyan' --prefix '{time}-{pid} {name}' 'npm run dev-frontend-server' 'npm run dev-backend' 'npm run dev-frontend-rollup' 'npm run dev-frontend-tailwind' --kill-others-on-fail",
+		"::dev-all": "concurrently --names 'WWW  ,rust ,roll ,tail ' --prefix-colors 'white,yellow,green,cyan' --prefix '{time}-{pid} {name}' 'npm run dev-frontend-server' 'npm run dev-backend' 'npm run dev-frontend-rollup' 'npm run dev-frontend-tailwind' --kill-others-on-fail",
 		"dev-backend": "(cd backend && rm -rf public/* && cargo run)",
 		"dev-frontend-server": "(cd frontend && sirv --dev --host 0.0.0.0 public)",
 		"dev-frontend-rollup": "(cd frontend && rollup -c -w)",
 		"dev-frontend-tailwind": "(cd frontend && postcss public/tailwind.css -o public/index.css -w)",
-		"start-all": "(cd backend && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run)"
+		"build-svelte": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css && rollup -c)",
+		"build-copy-bundle": "rm -R backend/public/* && cp -R frontend/public/ backend/public && . version.sh && sed -i '' \"s/-- RODUCT_VERSION = DEVELOPMENT --/-- RODUCT_VERSION = $PRODUCT_VERSION --/\" backend/public/index.html",
+		"::build-local": "(cd backend && cargo build) & (npm run build-svelte && npm run build-copy-bundle)",
+		"::start-local": "(cd backend && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run)",
+		"build-docker-cargo": "(cd backend && docker run --rm -it -v \"$(pwd)\":/home/rust/src ekidd/rust-musl-builder cargo build --release)",
+		"build-docker-image": ". version.sh && docker build -t sse-chat:$PRODUCT_VERSION .",
+		"::build-docker-all": "npm run build-docker-cargo && npm run build-svelte && npm run build-copy-bundle && npm run build-docker-image",
+		"::start-docker": ". version.sh && docker run --rm -it --name sse-chat-backend -p 5050:5050 --env CORS_ALLOW_ORIGIN=http://localhost:5050 sse-chat:$PRODUCT_VERSION",
+		"k8s-tag-push": ". version.sh && docker tag sse-chat:$PRODUCT_VERSION registry.digitalocean.com/samwise-gamgee/sse-chat:$PRODUCT_VERSION && docker push registry.digitalocean.com/samwise-gamgee/sse-chat:$PRODUCT_VERSION",
+		"k8s-apply": ". version.sh && sed -i '' \"s/sse-chat:.*$/sse-chat:$PRODUCT_VERSION/\" dok8s.yaml && kubectl apply -f dok8s.yaml",
+		"::k8s-tag-push-apply": "npm run k8s-tag-push && npm run k8s-apply"
 	},
 	"devDependencies": {
 		"concurrently": "6.0.2",
