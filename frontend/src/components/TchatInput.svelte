@@ -3,8 +3,6 @@ import {
     createEventDispatcher
 } from "svelte";
 
-import Svg from './right-arrow.svg'
-
 const dispatch = createEventDispatcher();
 let value = "";
 
@@ -24,29 +22,15 @@ function handleKeyPress(event) {
 }
 </script>
 
-<style>
-.root {
-    padding: 30px;
-}
-
-.root img {
-    width: 66px;
-    height: 66px;
-    padding: 20px;
-}
-
-textarea {
-    width: calc(100% - 120px);
-    border: none;
-    padding: 10px 20px;
-    font: 14px/22px "Lato", Arial, sans-serif;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    resize: none;
-}
-</style>
-
-<div class="root">
-    <textarea bind:value placeholder="Type your message" rows="3"  on:keypress={handleKeyPress}/>
-        <img src="data:image/svg+xml;utf8,{Svg}" alt="Send" on:click={handleSubmit}/>
-        </div>
+<div class="py-5">
+    <form class="m-4 flex">
+        <textarea
+            bind:value
+            on:keypress={handleKeyPress}
+            class="w-full bg-gray-300 py-5 px-3 rounded-l-lg"
+            type="text"
+            placeholder="type your message here..."
+            />
+        <button on:click={handleSubmit} class="px-8 rounded-r-lg bg-yellow-400  text-gray-800 font-bold p-4 uppercase border-yellow-500 border-t border-b border-r">Send</button>
+    </form>
+</div>

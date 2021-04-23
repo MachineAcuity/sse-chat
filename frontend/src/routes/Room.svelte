@@ -4,12 +4,8 @@ import Tchat from "../components/Tchat.svelte";
 export let params = {};
 </script>
 
-<style>
-.root {
-    padding: 80px 0;
-}
-</style>
-
-<div class="root">
-    <Tchat roomId={params.room_id} />
+<div class="flex h-screen justify-center items-center bg-gray-400">
+    <div class="text-center">
+        <Tchat roomId={params.room_id} />
+    </div>
 </div>

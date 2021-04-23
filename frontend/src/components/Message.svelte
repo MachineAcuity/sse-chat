@@ -7,84 +7,41 @@ export let message = {
 };
 </script>
 
-<style>
-.root {
-    margin-bottom: 15px;
-}
-
-.time {
-    color: #a8aab1;
-    padding-left: 6px;
-} 
-
-.message {
-    color: white;
-    padding: 18px 20px;
-    line-height: 26px;
-    font-size: 16px;
-    border-radius: 7px;
-    margin-bottom: 30px;
-    width: 90%;
-    position: relative;
-}
-
-.message:after {
-    bottom: 100%;
-    left: 7%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-bottom-color: #86bb71;
-    border-width: 10px;
-    margin-left: -10px;
-}
-
-.my-message {
-    background: #86bb71;
-}
-
-.other-message {
-    background: #94c2ed;
-}
-
-.other-message:after {
-    border-bottom-color: #94c2ed;
-    left: 93%;
-}
-
-.align-right {
-    text-align: right;
-}
-
-.float-right {
-    float: right;
-}
-</style>
-
 {#if alignRight}
-<div>
-    <div class="root align-right">
-        <span class="time">
-            {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
-        </span>
+<div class="flex justify-end mb-4">
+    <div
+        class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+        >
+        {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
         &nbsp; &nbsp;
-        <span>{message.user_id}</span>
+        {message.user_id}
+        &nbsp; &nbsp;
+        {message.message}
     </div>
-    <div class="message other-message float-right">{message.message}</div>
+    <img
+        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+        class="object-cover h-8 w-8 rounded-full"
+        alt=""
+        />
 </div>
+
 {:else}
-<div>
-    <div class="root">
-        <span>
-            {message.user_id}
-        </span>
-        <span class="time">
-            {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
-        </span>
+
+<div class="flex justify-start mb-4">
+    <img
+        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+        class="object-cover h-8 w-8 rounded-full"
+        alt=""
+        />
+    <div
+        class="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
+        >
+        {message.user_id}
+        &nbsp;
+        {`${new Date(message.time).toLocaleDateString()} ${new Date(message.time).toLocaleTimeString()}`}
+        &nbsp;
+        {message.message}
     </div>
-    <div class="message my-message">{message.message}</div>
 </div>
+
 {/if}

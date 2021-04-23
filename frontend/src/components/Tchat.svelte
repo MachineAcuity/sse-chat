@@ -5,7 +5,9 @@ import {
     afterUpdate
 } from "svelte";
 
-import { api_url } from '../API';
+import {
+    api_url
+} from '../API';
 import {
     createChannelStore
 } from "../channel/store";
@@ -32,7 +34,7 @@ afterUpdate(() => {
 });
 
 const handleSendMessage = async e => {
-    await fetch(api_url +`/room/${roomId}/send`, {
+    await fetch(api_url + `/room/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
             user_id: messages_and_user_id.user_id,
@@ -56,47 +58,17 @@ onMount(() => {
 });
 </script>
 
-<style>
-.root {
-    margin: 0 auto;
-    width: 750px;
-    border-radius: 5px;
-    background: #f2f5f8;
-    border-radius: 5px;
-    color: #434651;
-}
-
-.root .history {
-    padding: 30px 30px 20px;
-    border-bottom: 2px solid white;
-    overflow-y: scroll;
-    max-height: 375px;
-}
-
-.root .history ul {
-    list-style-type: none;
-}
-
-.clearfix:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-}
-</style>
-
-<div class="root">
+<div class="container mx-auto shadow-lg rounded-lg">
     <TchatHeader title={`Chat on ${roomId} as ${messages_and_user_id.user_id}`} messageCount={messages_and_user_id.messages.length} />
-    <div class="history" bind:this={div}>
-        <ul>
-            {#each messages_and_user_id.messages as message, i}
-            <li class="clearfix">
+    <div class="flex flex-row justify-between bg-white">
+        <div class="w-full px-5 flex flex-col justify-between">
+            <div class="flex flex-col mt-5" bind:this={div}>
+                {#each messages_and_user_id.messages as message, i}
                 <Message alignRight={i % 2} {message} />
-            </li>
-            {/each}
-        </ul>
+           {/each}
+          </div>
+            <TchatInput on:message={handleSendMessage} />
+        </div>
     </div>
-    <TchatInput on:message={handleSendMessage} />
 </div>
+
