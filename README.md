@@ -73,9 +73,10 @@ npm run ::k8s-tag-push-apply
 
 ## Improvements
 
-* TODO:  Implement script for increment on build.
-* TODO:  Investigate switching to type script.
-* TODO:  Switch to SvelteKit (when mature enough).
-* TODO:  Switch Dockerfile from alpine to scratch (maybe).
-* TODO:  Implement container health service check.
-* TODO:  Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+* Fix issue with new line being added to the textarea.
+* Implement container health service check.
+* Implement script for increment on build.
+* Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+* Switch to SvelteKit (when mature enough).
+    * Investigate switching to type script - https://svelte.dev/blog/svelte-and-typescript . According to https://codechips.me/how-to-use-typescript-with-svelte/ the dev experience is poor, and SvelteKit (by feature of using Svite) would prove to be a better time to make the transition
+* Consider switching container from alpine to scratch. While it is definitely a plus having a smaller contaioner, having some basic bash for troubleshooting with alpine could be an advantage.

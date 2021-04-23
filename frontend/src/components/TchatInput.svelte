@@ -17,6 +17,7 @@ const handleSubmit = () => {
 function handleKeyPress(event) {
     var keyCode = event.code || event.key;
     if (keyCode == 'Enter') {
+        event.preventDefault();
         handleSubmit();
     }
 }
