@@ -73,8 +73,7 @@ npm run ::k8s-tag-push-apply
 
 ## Improvements
 
-* Reorganize names of chat components.
-* Include room name in chat title.
+* [done] Reorganize names of chat components.
 * In addition to sending time to server, send a sequantial message ID, odd from client -> server, even for server -> client. For each connection, store the latest ID.
 * Switch to format with separate field for date, probably something like this (above message, not isnide): https://tailwindcomponents.com/component/comment-section
 * When sending time back to client use server time instead of time provided by client.

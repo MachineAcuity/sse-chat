@@ -8,15 +8,15 @@ export const createChannelStore = (roomId) => {
 
 	eventSource.onmessage = (e) => {
 		console.log(e);
-		update((messages_and_user_id) => ({
-			messages: messages_and_user_id.messages.concat(JSON.parse(e.data)),
-			user_id: messages_and_user_id.user_id
+		update((chat_state) => ({
+			messages: chat_state.messages.concat(JSON.parse(e.data)),
+			user_id: chat_state.user_id
 		}));
 	};
 
 	eventSource.addEventListener('user', (e) => {
-		update((messages_and_user_id) => ({
-			messages: messages_and_user_id.messages,
+		update((chat_state) => ({
+			messages: chat_state.messages,
 			user_id: parseInt(e.data, 10)
 		}));
 	});

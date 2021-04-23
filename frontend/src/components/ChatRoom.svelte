@@ -11,12 +11,12 @@ import {
 import {
     createChannelStore
 } from "../channel/store";
-import Message from "./Message.svelte";
-import TchatHeader from "./TchatHeader.svelte";
-import TchatInput from "./TchatInput.svelte";
+import ChatPreviousMessage from "./ChatPreviousMessage.svelte";
+import ChatRoomHeader from "./ChatRoomHeader.svelte";
+import ChatNewMessage from "./ChatNewMessage.svelte";
 
 export let roomId;
-let messages_and_user_id = {
+let chat_state = {
     messages: [],
     user_id: 1
 }
@@ -37,7 +37,7 @@ const handleSendMessage = async e => {
     await fetch(api_url + `/room/${roomId}/send`, {
         body: JSON.stringify({
             message: e.detail.text,
-            user_id: messages_and_user_id.user_id,
+            user_id: chat_state.user_id,
             time: Date.now()
         }),
         headers: {
@@ -50,8 +50,8 @@ const handleSendMessage = async e => {
 onMount(() => {
     const store = createChannelStore(roomId);
 
-    store.subscribe(incoming_messages_and_user_id => {
-        messages_and_user_id = incoming_messages_and_user_id;
+    store.subscribe(incoming_chat_state => {
+        chat_state = incoming_chat_state;
     });
 
     return store.close;
@@ -59,17 +59,17 @@ onMount(() => {
 </script>
 
 <div class="container max-w-2xl shadow-lg rounded-lg">
-    <TchatHeader title={`Chat on ${roomId} as ${messages_and_user_id.user_id}`} messageCount={messages_and_user_id.messages.length} />
+    <ChatRoomHeader roomId={roomId} userId={chat_state.user_id} messageCount={chat_state.messages.length} />
     <div class="flex flex-row justify-between bg-white">
         <div class="flex-grow" />
         <div class="w-full px-5 flex flex-col justify-between">
             <div class="flex flex-col mt-5 overflow-y-auto" style="min-height:300px; max-height: calc(100vh - 280px)" bind:this={div}>
-                {#each messages_and_user_id.messages as message, i}
-                <Message alignRight={i % 2} {message} />
+                {#each chat_state.messages as message, i}
+                <ChatPreviousMessage alignRight={i % 2} {message} />
            {/each}
         
           </div>
-            <TchatInput on:message={handleSendMessage} />
+            <ChatNewMessage on:message={handleSendMessage} />
         </div>
     </div>
 </div>
