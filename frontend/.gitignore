@@ -1,3 +1,7 @@
 # Web app rollup build
 #
 build/
+
+# Tailwind
+#
+public/index.css

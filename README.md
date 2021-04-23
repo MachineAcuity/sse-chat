@@ -109,8 +109,8 @@ kubectl get pods --watch
 ## Improvements
 
 * [DONE] Use ENV variables to set up CORS.
+* [DONE] Switch to Tailwind CSS.
 * TODO:  Investigate switching to type script.
-* TODO:  Switch to Tailwind CSS.
 * TODO:  Switch to SvelteKit (when mature enough).
 * TODO:  Switch Dockerfile from alpine to scratch (maybe).
 * TODO:  Implement container health service check.
