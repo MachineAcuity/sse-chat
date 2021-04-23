@@ -32,4 +32,10 @@ spec:
               value: "https://saasclerk.com/"
           ports:
             - containerPort: 5050
+          livenessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            httpGet:
+              path: / # Static files are served by the same application, so this is a decent approximation that the application is alive
+              port: 5050
           imagePullPolicy: Always

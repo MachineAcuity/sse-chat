@@ -73,9 +73,19 @@ npm run ::k8s-tag-push-apply
 
 ## Improvements
 
-* Fix issue with new line being added to the textarea.
-* Implement container health service check.
+* Reorganize names of chat components.
+* Include room name in chat title.
+* In addition to sending time to server, send a sequantial message ID, odd from client -> server, even for server -> client. For each connection, store the latest ID.
+* Switch to format with separate field for date, probably something like this (above message, not isnide): https://tailwindcomponents.com/component/comment-section
+* When sending time back to client use server time instead of time provided by client.
+* Reorganize chat so that messages from server (and other chatters) are on the left (even IDs), and messages sent from client are on the right (odd IDs).
+* Reorganize chat so that date appears only if it is a different date, or the date changes from previous message. Make so that time is shown only when date is shown, or when more than two minutes passed since previous message.
+* User 0 is message from server directly, not another user. Everybody else is a user. Create three separate icons for user, other users, and server.
+* Implement functionality so that when user says marco, the message is not transmitted but rather server replies only to said user with polo.
+* Modify server to send message to sender too (returned) this way it will display in their list of messages (and it has their user id so it will be displayed on the right).
+* Test container health service check (liveness probe). The test is successful is the container is not killed since at this point we expect to be always alive at least when without traffic.
 * Implement script for increment on build.
+* On iOS when viewed in the Chrome browser, the available screen height is smaller than 100vh, and it causes scrolling. Would be nice to fix somehow.
 * Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
 * Switch to SvelteKit (when mature enough).
     * Investigate switching to type script - https://svelte.dev/blog/svelte-and-typescript . According to https://codechips.me/how-to-use-typescript-with-svelte/ the dev experience is poor, and SvelteKit (by feature of using Svite) would prove to be a better time to make the transition
