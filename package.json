@@ -25,5 +25,7 @@
 		"concurrently": "6.0.2",
 		"sirv-cli": "1.0.11"
 	},
-	"workspaces": [ "frontend" ]
+	"workspaces": [
+		"frontend"
+	]
 }

@@ -1,4 +1,6 @@
 <script>
+    import ChatUserIcon from "./ChatUserIcon.svelte";
+
 export let alignRight = false;
 export let message = {
     user_id: 0,
@@ -18,21 +20,13 @@ export let message = {
         &nbsp; &nbsp;
         {message.message}
     </div>
-    <img
-        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-        class="object-cover h-8 w-8 rounded-full"
-        alt=""
-        />
+    <ChatUserIcon userId={message.user_id} /> 
 </div>
 
 {:else}
 
 <div class="flex justify-start mb-4">
-    <img
-        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-        class="object-cover h-8 w-8 rounded-full"
-        alt=""
-        />
+    <ChatUserIcon userId={message.user_id} /> 
     <div
         class="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
         >

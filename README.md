@@ -70,16 +70,18 @@ npm run ::k8s-tag-push-apply
 * Docker container is built following the steps in [Building Minimal Docker Containers for Rust Applications](https://blog.semicolonsoftware.de/building-minimal-docker-containers-for-rust-applications/).
 * Tailwind CSS configuration is done following [How To Use Svelte JS with Tailwind CSS](https://levelup.gitconnected.com/how-to-use-svelte-js-with-tailwind-css-f0554187eca1).
 * The chat window is implemented following the examples in [Chat Messages](https://tailwindcomponents.com/component/chat-messages).
+* Photos used from https://unsplash.com/photos/PPfo56sLIB0 
 
 ## Improvements
 
 * [done] Reorganize names of chat components.
-* In addition to sending time to server, send a sequantial message ID, odd from client -> server, even for server -> client. For each connection, store the latest ID.
 * Switch to format with separate field for date, probably something like this (above message, not isnide): https://tailwindcomponents.com/component/comment-section
+* User 0 is message from server directly, not another user. Everybody else is a user. Create three separate icons for user, other users, and server.
+
+* In addition to sending time to server, send a sequantial message ID, odd from client -> server, even for server -> client. For each connection, store the latest ID.
 * When sending time back to client use server time instead of time provided by client.
 * Reorganize chat so that messages from server (and other chatters) are on the left (even IDs), and messages sent from client are on the right (odd IDs).
 * Reorganize chat so that date appears only if it is a different date, or the date changes from previous message. Make so that time is shown only when date is shown, or when more than two minutes passed since previous message.
-* User 0 is message from server directly, not another user. Everybody else is a user. Create three separate icons for user, other users, and server.
 * Implement functionality so that when user says marco, the message is not transmitted but rather server replies only to said user with polo.
 * Modify server to send message to sender too (returned) this way it will display in their list of messages (and it has their user id so it will be displayed on the right).
 * Test container health service check (liveness probe). The test is successful is the container is not killed since at this point we expect to be always alive at least when without traffic.
