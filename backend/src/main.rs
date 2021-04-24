@@ -92,22 +92,22 @@ fn user_message(room_name: String, posted_message: PostedMessage, users: &Users)
     let room = rooms.get_mut(&room_name);
     match room {
         Some(room) => {
-            room.retain(|uid, tx| {
-                if posted_message.user_id == *uid {
-                    // don't send to same user, but do retain
-                    true
-                } else {
+            room.retain(|_uid, tx| {
+                // if posted_message.user_id == *uid {
+                //     // don't send to same user, but do retain
+                //     true
+                // } else {
                     let response = match serde_json::to_string(&posted_message) {
                         Ok(str) => str,
                         Err(_) => {
-                            "{\"user_id\": 0, \"message\": Something went wrong, \"time\": 0, }"
+                            "{\"user_id\": 0, \"message\": \"何かがうまくいかなかった\", \"time\": 0, }"
                                 .to_string()
                         }
                     };
 
                     // If not `is_ok`, the SSE stream is gone, and so don't retain
                     tx.send(Message::Reply(response)).is_ok()
-                }
+                // }
             });
         }
         None => {

@@ -65,7 +65,7 @@ onMount(() => {
         <div class="w-full px-5 flex flex-col justify-between">
             <div class="flex flex-col mt-5 overflow-y-auto" style="min-height:300px; max-height: calc(100vh - 280px)" bind:this={div}>
                 {#each chat_state.messages as message, i}
-                <ChatPreviousMessage alignRight={i % 2} {message} />
+                <ChatPreviousMessage {message} thisUserId={chat_state.user_id} />
            {/each}
         
           </div>
