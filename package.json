@@ -10,7 +10,7 @@
 		"dev-frontend-rollup": "(cd frontend && rollup -c -w)",
 		"dev-frontend-tailwind": "(cd frontend && postcss public/tailwind.css -o public/index.css -w)",
 		"build-svelte": "(cd frontend && export NODE_ENV=production && postcss public/tailwind.css -o public/index.css && rollup -c)",
-		"build-copy-bundle": "rm -R backend/public/* && cp -R frontend/public/ backend/public && . version.sh && sed -i '' \"s/-- RODUCT_VERSION = DEVELOPMENT --/-- RODUCT_VERSION = $PRODUCT_VERSION --/\" backend/public/index.html",
+		"build-copy-bundle": "rm -R backend/public/ && mkdir backend/public/ && cp -R frontend/public/ backend/public && . version.sh && sed -i '' \"s/-- RODUCT_VERSION = DEVELOPMENT --/-- RODUCT_VERSION = $PRODUCT_VERSION --/\" backend/public/index.html",
 		"::build-local": "(cd backend && cargo build) & (npm run build-svelte && npm run build-copy-bundle)",
 		"::start-local": "(cd backend && export CORS_ALLOW_ORIGIN=\"http://localhost:5050\" && cargo run)",
 		"build-docker-cargo": "(cd backend && docker run --rm -it -v \"$(pwd)\":/home/rust/src ekidd/rust-musl-builder cargo build --release)",
