@@ -79,16 +79,17 @@ npm run ::k8s-tag-push-apply
 * [done] Reorganize chat so that messages from server (and other chatters) are on the left (even IDs), and messages sent from client are on the right (odd IDs).
 * [done] Modify server to send message to sender too (returned) this way it will display in their list of messages (and it has their user id so it will be displayed on the right).
 * [done] Switch to format with separate field for date, probably something like this (above message, not isnide): https://tailwindcomponents.com/component/comment-section
+* [done] Attempt upgrading rollup-plugin-svelte from 6.1.1 to 7.1.0.
+* [done] Implement functionality so that when user says marco, the message is not transmitted but rather server replies only to said user with polo.
 
+* [wip] Consider switching container from alpine to scratch. While it is definitely a plus having a smaller contaioner, having some basic bash for troubleshooting with alpine could be an advantage. If implemented, explain in readme.
+* [wip] Test container health service check (liveness probe). The test is successful is the container is not killed since at this point we expect to be always alive at least when without traffic.
+* Refactor so instead of user we reffer to session througout the project.
 * Update so that if a non-server user is sending a message, the name is displayed as on https://tailwindcomponents.com/component/comment-section , probably display name inside bubble on a separate line, like inside the message in the example.
 * Reorganize chat so that date appears only if it is a different date, or the date changes from previous message. Make so that time is shown only when date is shown, or when more than two minutes passed since previous message.
-* Attempt upgrading rollup-plugin-svelte from 6.1.1 to 7.1.0.
-* Implement functionality so that when user says marco, the message is not transmitted but rather server replies only to said user with polo.
-* Test container health service check (liveness probe). The test is successful is the container is not killed since at this point we expect to be always alive at least when without traffic.
 * Implement script for increment on build.
 * On iOS when viewed in both Chrome and Safari, the available screen height is smaller than 100vh, and it causes scrolling. Would be nice to fix somehow.
 * Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
-* Consider switching container from alpine to scratch. While it is definitely a plus having a smaller contaioner, having some basic bash for troubleshooting with alpine could be an advantage. If implemented, explain in readme.
 
 * Include a list of messages not sent at bottom, and ability to re-send (or clear).
 

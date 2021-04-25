@@ -84,7 +84,7 @@ fn user_connected(
 }
 
 fn user_message(room_name: String, posted_message: PostedMessage, users: &Users) {
-    // New message from this user, send it to everyone else (except same uid)...
+    // New message from this user, send it to everyone else including the same user...
     //
     // We use `retain` instead of a for loop so that we can reap any user that
     // appears to have disconnected.
@@ -92,22 +92,31 @@ fn user_message(room_name: String, posted_message: PostedMessage, users: &Users)
     let room = rooms.get_mut(&room_name);
     match room {
         Some(room) => {
-            room.retain(|_uid, tx| {
-                // if posted_message.user_id == *uid {
-                //     // don't send to same user, but do retain
-                //     true
-                // } else {
+            room.retain(|uid, tx| {
+                let is_marco = posted_message.message.eq_ignore_ascii_case("marco");
+                if posted_message.user_id == *uid && is_marco {
+                    // Send polo to the same user, only retain if not `is_ok`
+                    let response = "{\"user_id\": 0, \"message\": \"Polo\", \"time\": 0 }"
+                        .to_string()
+                    ;
+
+                    // If not `is_ok`, the SSE stream is gone, and so don't retain
+                    tx.send(Message::Reply(response)).is_ok()
+                } else  if posted_message.user_id != *uid && is_marco {
+                    // don't send polo to other users, but do retain
+                    true
+                } else {
                     let response = match serde_json::to_string(&posted_message) {
                         Ok(str) => str,
                         Err(_) => {
-                            "{\"user_id\": 0, \"message\": \"何かがうまくいかなかった\", \"time\": 0, }"
+                            "{\"user_id\": 0, \"message\": \"何かがうまくいかなかった\", \"time\": 0 }"
                                 .to_string()
                         }
                     };
 
                     // If not `is_ok`, the SSE stream is gone, and so don't retain
                     tx.send(Message::Reply(response)).is_ok()
-                // }
+                }
             });
         }
         None => {
@@ -128,7 +137,7 @@ async fn main() {
     let users = warp::any().map(move || users.clone());
 
     // Determine CORS allowed origin
-    let allow_origin :String= match env::var("CORS_ALLOW_ORIGIN") {
+    let allow_origin: String = match env::var("CORS_ALLOW_ORIGIN") {
         Ok(allowed_origin) => allowed_origin,
         Err(_) => CORS_ALLOW_ORIGIN_DEFAULT.to_string(),
     };
