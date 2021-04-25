@@ -91,6 +91,7 @@ npm run ::k8s-tag-push-apply
 * Implement script for increment on build.
 * On iOS when viewed in both Chrome and Safari, the available screen height is smaller than 100vh, and it causes scrolling. Would be nice to fix somehow.
 * Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
+* Fix right align on "Message display problem 1".
 
 * Include a list of messages not sent at bottom, and ability to re-send (or clear).
 
