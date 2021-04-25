@@ -1,9 +1,14 @@
 <script>
 export let userId = 0
 export let thisUserId = 0
+export let grouping = 'only'
 </script>
 
-{#if userId === 0}
+{#if grouping !== 'first' && grouping !== 'only'}
+
+<div class="h-1 w-12 "/>
+
+{:else if userId === 0}
 
 <img
     src="images/components/ChatUserIcon-Server.jpeg"

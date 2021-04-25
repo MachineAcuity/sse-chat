@@ -81,12 +81,13 @@ npm run ::k8s-tag-push-apply
 * [done] Switch to format with separate field for date, probably something like this (above message, not isnide): https://tailwindcomponents.com/component/comment-section
 * [done] Attempt upgrading rollup-plugin-svelte from 6.1.1 to 7.1.0.
 * [done] Implement functionality so that when user says marco, the message is not transmitted but rather server replies only to said user with polo.
+* [rejected] Refactor so instead of user we reffer to session througout the project.
+* [done] - The user icon is displayed again instead of: Update so that if a non-server user is sending a message, the name is displayed as on https://tailwindcomponents.com/component/comment-section , probably display name inside bubble on a separate line, like inside the message in the example.
+* [done] Reorganize chat so that date appears only if it is a different date, or the date changes from previous message. Make so that time is shown only when date is shown, or when more than two minutes passed since previous message.
+* [done] Implement fuctionality to bunch up messages with only one icon - this will be done with two new fields in the array of messages - must_show_date = 'date' | 'time' | false  and grouping = 'first' | 'betwixt' | 'last' | 'only'
 
 * [wip] Consider switching container from alpine to scratch. While it is definitely a plus having a smaller contaioner, having some basic bash for troubleshooting with alpine could be an advantage. If implemented, explain in readme.
 * [wip] Test container health service check (liveness probe). The test is successful is the container is not killed since at this point we expect to be always alive at least when without traffic.
-* Refactor so instead of user we reffer to session througout the project.
-* Update so that if a non-server user is sending a message, the name is displayed as on https://tailwindcomponents.com/component/comment-section , probably display name inside bubble on a separate line, like inside the message in the example.
-* Reorganize chat so that date appears only if it is a different date, or the date changes from previous message. Make so that time is shown only when date is shown, or when more than two minutes passed since previous message.
 * Implement script for increment on build.
 * On iOS when viewed in both Chrome and Safari, the available screen height is smaller than 100vh, and it causes scrolling. Would be nice to fix somehow.
 * Consider using env variable in yaml instead of modifying it - https://v1-18.docs.kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/
