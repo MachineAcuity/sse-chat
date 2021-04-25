@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: sse-chat
-          image: registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.1-1
+          image: registry.digitalocean.com/samwise-gamgee/sse-chat:v1.0.4-0
           env:
             - name: CORS_ALLOW_ORIGIN
               value: "https://saasclerk.com/"
